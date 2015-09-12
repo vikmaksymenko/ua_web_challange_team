@@ -18,13 +18,56 @@
 				<label for="pool-description">Вводный текст</label>
 				<textarea name="pool-description" rows="3" id="pool-description" class="form-control"></textarea>				
 			</div>
-			<button class="btn btn-default" type="submit">Добавить вопрос</button>
+			<button class="btn btn-primary btn-lg" type="button" id="add-question" data-toggle="modal" data-target="#question-type-modal">Добавить вопрос</button>
 		</form>
+	</div>
+
+	<!-- Chosing question type modal -->
+	<div class="modal fade" id="question-type-modal" tabindex="-1" role="dialog" aria-labelledby="Тип вопроса">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Выберите тип вопроса:</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form action="" class="quistion-choose">
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="quistion-choose-radios" id="radio-question" value="radio-question">
+				    Одиночный выбор
+				  </label>
+				</div>
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="quistion-choose-radios" id="check-question" value="check-question">
+				    Множественный выбор
+				  </label>
+				</div>
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="quistion-choose-radios" id="text-question" value="text-question">
+				    Тестовый выбор
+				  </label>
+				</div>
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="quistion-choose-radios" id="range-question" value="range-question">
+				    Выбор количества
+				  </label>
+				</div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+	        <button type="button" class="btn btn-primary">Выбрать</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 </body>
 <script src="js/jquery-2.1.4.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script>
-	
 </script>
 </html>
