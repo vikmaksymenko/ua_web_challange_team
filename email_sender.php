@@ -1,12 +1,43 @@
+<!--//<h1 mc:edit="company">company</h1>
+//Hello, <div mc:edit="user_name">user_name</div>-->
+
 <?php
-require_once 'mandrill-api-php/src/Mandrill.php'; //Not required with Composer
+require_once 'mandrill-api-php/src/Mandrill.php';
+
+$email_sender = "shapovalovei@gmail.com";
+$email_addressee = "eshapovalov@readdle.com";
+$name_sender = "Eugene Shapovalov";
+$link_survey = "https://vk.com/shapovaloveugene";
+$name_survey = "What are do you think about your country?";
+
 try {
     $mandrill = new Mandrill('7OUSQns8FOfo6ge2vgxguw');
-    $template_name = 'TEST';
+    $template_name = 'ua_web_challange_team';
     $template_content = array(
         array(
-            'name' => 'Test name',
-            'content' => 'example content'
+            'name' => 'email_sender',
+            'content' => $email_sender
+        ),
+
+        array(
+            'name' => 'name_sender',
+            'content' => $name_sender
+        ),
+        array(
+            'name' => 'from_name_sender',
+            'content' => "From: " . $name_sender
+        ),
+        array(
+            'name' => 'link_survey',
+            'content' => $link_survey
+        ),
+        array(
+            'name' => 'name_survey',
+            'content' => $name_survey
+        ),
+        array(
+            'name' => 'invitation',
+            'content' => $name_sender . " has sent you survey: "
         )
     );
     $message = array(
@@ -17,12 +48,12 @@ try {
         'from_name' => 'Example Name',
         'to' => array(
             array(
-                'email' => 'eshapovalov@readdle.com',
-                'name' => 'Eugene Shapovalov',
+                'email' => $email_addressee,
+                'name' => 'Viktor Maksimenko',
                 'type' => 'to'
             )
         ),
-        'headers' => array('Reply-To' => 'message.reply@example.com'),
+        'headers' => array('Reply-To' => $email_sender),
         'important' => false,
         'track_opens' => null,
         'track_clicks' => null,
@@ -42,7 +73,15 @@ try {
             array(
                 'name' => 'merge1',
                 'content' => 'merge1 content'
-            )
+            ),
+            array(
+                 'name' => 'link_survey',
+                 'content' => $link_survey
+             ),
+            array(
+                 'name' => 'email_sender',
+                 'content' => "mailto:".$email_sender
+             )
         ),
         'merge_vars' => array(
             array(
@@ -61,19 +100,7 @@ try {
     $send_at = 'example send_at';
     $result = $mandrill->messages->sendTemplate($template_name, $template_content, $message, $async, $ip_pool);
     print_r($result);
-    /*
-    Array
-    (
-        [0] => Array
-            (
-                [email] => recipient.email@example.com
-                [status] => sent
-                [reject_reason] => hard-bounce
-                [_id] => abc123abc123abc123abc123abc123
-            )
 
-    )
-    */
 } catch(Mandrill_Error $e) {
     // Mandrill errors are thrown as exceptions
     echo 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
