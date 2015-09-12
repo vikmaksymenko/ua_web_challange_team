@@ -13,6 +13,7 @@ if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
 
+$postUsername = htmlspecialchars($_POST['username']);
 $postEmail = htmlspecialchars($_POST['email']);
 $postPassword = htmlspecialchars($_POST['password']);
 
