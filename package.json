@@ -16,10 +16,6 @@
     "url": "https://github.com/vikmaksimenko/ua_web_challange_team/issues"
   },
   "homepage": "https://github.com/vikmaksimenko/ua_web_challange_team#readme",
-  "dependencies": {
-    "body-parser": "^1.13.3",
-    "express": "^4.13.3"
-  },
   "devDependencies": {
     "mocha": "^2.3.2"
   }
