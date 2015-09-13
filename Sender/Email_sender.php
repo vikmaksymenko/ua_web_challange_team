@@ -3,7 +3,6 @@
 
 <?php
 require_once 'mandrill-api-php/src/Mandrill.php';
-require_once 'Send.php';
 
 class email_sender
 {
