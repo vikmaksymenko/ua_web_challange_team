@@ -17,7 +17,21 @@ if($stmt->execute()) {
 } else {
     die('Error : ('. $mysqli->errno .') '. $mysqli->error);
 }
+$survey_id = $mysqli->insert_id;
 
 $stmt->close();
+
+$emails = explode(" ", $_POST['emails']);
+
+$query = 'INSERT INTO links (survey_id, email, hash) VALUES (?, ?, ?)';
+$stmt = $mysqli->prepare($query);
+foreach($emails as $email) {
+    $hash = hash('sha256', $email ." ". $survey_id);
+    $stmt->bind_param('iss', $survey_id, $email, $hash);
+    if(!$stmt->execute()) {
+        die('Error : ('. $mysqli->errno .') '. $mysqli->error);
+    }
+}
+
 $mysqli->close();
 ?>
