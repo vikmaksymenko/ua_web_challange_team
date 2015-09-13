@@ -105,9 +105,18 @@ $arr;
 
 for($i = 0; $i<3; $i++){
 
-    $send = new Send();
+    $send = array("email_sender" => "shapovalovei@gmail.com",
+                  "email_addressee" => "eshapovalov@readdle.com",
+                  "name_sender" => "Eugene Shapovalov",
+                  "link_survey" => "https://vk.com/shapovaloveugene",
+                  "name_survey" => "What are do you think about your country?"
+    );
+
+    // $send = new Send();
     $arr[$i] = $send;
 }
+
+
 
 $email_sender = new email_sender;
 $email_sender->send_email($arr);

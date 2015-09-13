@@ -14,50 +14,52 @@ class email_sender
      */
     function send_email($array_send_data)
     {
-        foreach ($array_send_data as &$send) {
+
+        foreach ($array_send_data as $send) {
+
             try {
                 $mandrill = new Mandrill('7OUSQns8FOfo6ge2vgxguw');
                 $template_name = 'ua_web_challange_team';
                 $template_content = array(
                     array(
                         'name' => 'email_sender',
-                        'content' => $send->getEMailSender()
+                        'content' => $send['email_sender']
                     ),
                     array(
                         'name' => 'name_sender',
-                        'content' => $send->getNameSender()
+                        'content' => $send['name_sender']
                     ),
                     array(
                         'name' => 'from_name_sender',
-                        'content' => "From: " . $send->getNameSender()
+                        'content' => "From: " . $send['name_sender']
                     ),
                     array(
                         'name' => 'link_survey',
-                        'content' => $send->getLinkSurvey()
+                        'content' => $send['link_survey']
                     ),
                     array(
                         'name' => 'name_survey',
-                        'content' => $send->getNameSurvey()
+                        'content' => $send['name_survey']
                     ),
                     array(
                         'name' => 'invitation',
-                        'content' => $send->getNameSurvey() . " has sent you survey: "
+                        'content' => $send['name_survey'] . " has sent you survey: "
                     )
                 );
                 $message = array(
                     'html' => '',
                     'text' => '',
                     'subject' => 'Please go to survey',
-                    'from_email' => $send->getEMailSender(),
+                    'from_email' => $send['email_sender'],
                     'from_name' => 'Newly Paranoid Maintainers',
                     'to' => array(
                         array(
-                            'email' => $send->getEmailAddressee(),
+                            'email' => $send['email_addressee'],
                             'name' => '',
                             'type' => 'to'
                         )
                     ),
-                    'headers' => array('Reply-To' => $send->getEMailSender()),
+                    'headers' => array('Reply-To' => $send['email_addressee']),
                     'important' => false,
                     'track_opens' => null,
                     'track_clicks' => null,
@@ -80,11 +82,11 @@ class email_sender
                         ),
                         array(
                             'name' => 'link_survey',
-                            'content' => $send->getLinkSurvey()
+                            'content' => $send['link_survey']
                         ),
                         array(
                             'name' => 'email_sender',
-                            'content' => "mailto:" . $send->getEMailSender()
+                            'content' => "mailto:" . $send['email_sender']
                         )
                     ),
                     'merge_vars' => array(
