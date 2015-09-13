@@ -3,7 +3,8 @@ include '../lib/mysql.php';
 
 $mysqli = connectToMySQL();
 
-$userID = findUser($mysqli, $_POST['email'], true);
+echo $_GET['email'];
+$userID = findUser($mysqli, $_GET['email'], true);
 if($userID) {
     $query = "SELECT id, name, start, end FROM surveys WHERE owner = ". $userID;
     $results = $mysqli->query($query);
