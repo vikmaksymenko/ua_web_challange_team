@@ -17,8 +17,8 @@ function connectToMySQL () {
     return $mysqli;
 }
 
-function findUser($mysqli, $email) {
-    $query = "SELECT username FROM users WHERE email = ? LIMIT 1";
+function findUser($mysqli, $email, $returnID) {
+    $query = "SELECT username, id FROM users WHERE email = ? LIMIT 1";
     
     $statement = $mysqli->prepare($query);
     
@@ -26,11 +26,15 @@ function findUser($mysqli, $email) {
     
     $statement->execute();
     
-    $statement->bind_result($username);
+    $statement->bind_result($username, $id);
     $matchingUser = $statement->fetch();
     $statement->close();
     
-    return $matchingUser[0].$username;
+    if($returnID) {
+        return $matchingUser[0].$id;
+    } else {
+        return $matchingUser[0].$username;
+    }
 }
 
 ?>
