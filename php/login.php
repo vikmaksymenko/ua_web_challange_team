@@ -3,7 +3,7 @@ include './lib/mysql.php';
 
 $mysqli = connectToMySQL();
     
-$query = "SELECT email FROM users WHERE email = ? AND password = ?";
+$query = "SELECT email FROM users WHERE email = ? AND password = ? LIMIT 1";
 $statement = $mysqli->prepare($query);
     
 $statement->bind_param('ss', htmlspecialchars($_POST['email']), htmlspecialchars($_POST['password']));

@@ -10,7 +10,7 @@ $postPassword = htmlspecialchars($_POST['password']);
 
 
 //Searching if no same user created already
-$query = "SELECT email FROM users WHERE email = ? OR username = ?";
+$query = "SELECT email FROM users WHERE email = ? OR username = ? LIMIT 1";
 $statement = $mysqli->prepare($query);
 
 $statement->bind_param('ss', $postEmail, $postUsername);
