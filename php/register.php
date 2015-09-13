@@ -1,4 +1,5 @@
 <?php
+
 include './lib/mysql.php';
 
 $mysqli = connectToMySQL();
@@ -7,22 +8,7 @@ $postUsername = htmlspecialchars($_POST['username']);
 $postEmail = htmlspecialchars($_POST['email']);
 $postPassword = htmlspecialchars($_POST['password']);
 
-
-
-//Searching if no same user created already
-$query = "SELECT email FROM users WHERE email = ? OR username = ? LIMIT 1";
-$statement = $mysqli->prepare($query);
-
-$statement->bind_param('ss', $postEmail, $postUsername);
-
-$statement->execute();
-
-$statement->bind_result($email);
-$matchingUser = $statement->fetch();
-
-$statement->close();
-
-if($matchingUser[0].$email) {
+if(findUser($mysqli, $postEmail)) {
     echo 'false';
 } else {
     //values to be inserted in database table
