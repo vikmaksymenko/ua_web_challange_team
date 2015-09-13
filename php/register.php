@@ -1,17 +1,7 @@
 <?php
-$servername = getenv('IP');
-$username = getenv('C9_USER');
-$password = "";
-$database = "c9";
-$dbport = 3306;
+include './lib/mysql.php';
 
-// Create connection
-$mysqli = new mysqli($servername, $username, $password, $database, $dbport);
-
-// Check connection
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
-}
+$mysqli = connectToMySQL();
 
 $postUsername = htmlspecialchars($_POST['username']);
 $postEmail = htmlspecialchars($_POST['email']);

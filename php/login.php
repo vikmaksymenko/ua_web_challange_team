@@ -1,33 +1,23 @@
 <?php
-    $servername = getenv('IP');
-    $username = getenv('C9_USER');
-    $password = "";
-    $database = "c9";
-    $dbport = 3306;
+include './lib/mysql.php';
+
+$mysqli = connectToMySQL();
     
-    // Create connection
-    $mysqli = new mysqli($servername, $username, $password, $database, $dbport);
+$query = "SELECT email FROM users WHERE email = ? AND password = ?";
+$statement = $mysqli->prepare($query);
     
-    // Check connection
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
+$statement->bind_param('ss', htmlspecialchars($_POST['email']), htmlspecialchars($_POST['password']));
     
-    $query = "SELECT email FROM users WHERE email = ? AND password = ?";
-    $statement = $mysqli->prepare($query);
+$statement->execute();
     
-    $statement->bind_param('ss', htmlspecialchars($_POST['email']), htmlspecialchars($_POST['password']));
+$statement->bind_result($email);
+$matchingUser = $statement->fetch();
     
-    $statement->execute();
+if($matchingUser[0].$email) {
+    echo 'true';
+} else {
+    echo 'false';
+}
     
-    $statement->bind_result($email);
-    $matchingUser = $statement->fetch();
-    
-    if($matchingUser[0].$email) {
-        echo 'true';
-    } else {
-        echo 'false';
-    }
-    
-    $statement->close();
+$statement->close();
 ?>
