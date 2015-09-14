@@ -4,7 +4,6 @@ include '../lib/mysql.php';
 session_start();
 
 $mysqli = connectToMySQL();
-echo "session".$_SESSION['email'];
 $userID = findUser($mysqli, $_SESSION['email'], true);
 if($userID) {
     $query = "SELECT id, name, start, end FROM surveys WHERE owner = ". $userID;
