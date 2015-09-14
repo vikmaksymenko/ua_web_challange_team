@@ -1,9 +1,11 @@
 <?php
 include '../lib/mysql.php';
 
-$mysqli = connectToMySQL();
+session_start();
 
-$query = "SELECT * FROM surveys WHERE id = ".  $_GET['id'] ." LIMIT 1";
+$mysqli = connectToMySQL();
+$userID = findUser($mysqli, $_SESSION['email'], true);
+$query = "SELECT * FROM surveys WHERE id = ".  $userID ." LIMIT 1";
 $results = $mysqli->query($query);
 
 

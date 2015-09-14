@@ -1,10 +1,11 @@
 <?php
 include '../lib/mysql.php';
 
-$mysqli = connectToMySQL();
+session_start();
 
-echo $_GET['email'];
-$userID = findUser($mysqli, $_GET['email'], true);
+$mysqli = connectToMySQL();
+echo "session".$_SESSION['email'];
+$userID = findUser($mysqli, $_SESSION['email'], true);
 if($userID) {
     $query = "SELECT id, name, start, end FROM surveys WHERE owner = ". $userID;
     $results = $mysqli->query($query);

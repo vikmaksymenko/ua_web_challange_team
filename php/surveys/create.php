@@ -3,8 +3,10 @@
 include '../lib/mysql.php';
 include '../../Sender/Email_sender.php';
 
+session_start();
+
 $mysqli = connectToMySQL();
-$ownerID = $_POST['ownerID'];
+$ownerID = findUser($mysqli, $_SESSION['email'], true);
 $surveyName = $_POST['name'];
 
 $query = 'INSERT INTO surveys (name, emails, data, start, end, owner) VALUES (?, ?, ?, ?, ?, ?)';
