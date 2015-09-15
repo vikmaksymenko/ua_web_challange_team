@@ -24,7 +24,9 @@ function findUser($mysqli, $email, $returnID) {
     
     $statement->bind_param('s', $email);
     
-    $statement->execute();
+    if(!$statement->execute()) {
+        return false;
+    }
     
     $statement->bind_result($username, $id);
     $matchingUser = $statement->fetch();

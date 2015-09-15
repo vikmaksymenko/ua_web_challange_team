@@ -6,9 +6,9 @@ $mysqli = connectToMySQL();
 
 $postUsername = htmlspecialchars($_POST['username']);
 $postEmail = str_replace('%2B', '+', htmlspecialchars($_POST['email']));
-$postPassword = htmlspecialchars($_POST['password']);
+$postPassword = hash('sha256', htmlspecialchars($_POST['password']));
 
-if(findUser($mysqli, $postEmail)) {
+if(findUser($mysqli, $postEmail, false)) {
     echo 'false';
 } else {
     //values to be inserted in database table
@@ -17,7 +17,7 @@ if(findUser($mysqli, $postEmail)) {
     $password = '"'.$mysqli->real_escape_string($postPassword).'"';
 
     $insert_row = $mysqli->query("INSERT INTO users (username, email, password) VALUES($username, $email, $password)");
-
+    
     if($insert_row) {
         echo 'true';
     } else {
