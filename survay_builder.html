@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="license" href="css/bootstrap-theme.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <style type="text/css" media="screen">
+    h3 input,
+    h4 input {
+        width: 100%;
+    }
+    
+    input[type="text"] {
+        border: none;
+        max-width: 100%;
+    }
+    
+    input[type="text"]:hover {
+        background: #eee;
+    }
+    
+    input[type="text"]:focus {
+        outline: none;
+        background: #ddd;
+    }
+    </style>
+</head>
+
+<body ng-app="myApp" ng-controller="userCtrl">
+    <div class="container">
+        <h3 class="survayName">
+            <input type="text" ng-model="newSurvayName" ng-blur="saveNewName()" placeholder="Название опроса">
+        </h3>
+        <h4 class="surveyDescription">
+            <input type="text" ng-model="newSurvayDescription" ng-blur="saveNewDescription()" placeholder="Описание опроса">
+        </h4>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Вопрос</th>
+                    <th>Варианты ответов</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="question" ng-repeat="question in questions">
+                    <td>{{ question.question }}</td>
+                    <td>{{ question.question }}</td>
+                    <td class="text-right">
+                        <a ng-click="editQuestion(question.questionId)">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a ng-click="removeQuestion(question.questionId)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <button class="btn btn-primary" ng-click="editQuestion('new')">
+            <span class="glyphicon glyphicon-plus"></span> Добавить вопрос
+        </button>
+        <button class="btn btn-success" ng-click="saveSurvay()">
+            <span class="glyphicon glyphicon-plus"></span> Сохранить опрос
+        </button>
+        <hr>
+        <div>
+            <h3 ng-show="edit">Создать новый вопрос: </h3>
+            <h3 ng-hide="edit">Изменить вопрос: </h3>
+            <h3><input type="text" ng-model="questionContent" placeholder="Вопрос?"></h3>
+            <div class="form-group">
+                <h4>Тип вопроса</h4>
+                <select class="form-control" ng-model="questionTypeList" ng-options="questionType as questionType.label for questionType in questionTypes"></select>
+            </div>
+            <form class="form-horizontal radio" ng-repeat="answer in answers" ng-show="questionTypeList.value === 'radio'">
+                <div class="form-group radio-inline">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadio" value="option" disabled="disabled">
+                        <input type="text" ng-model="answer">
+                        <a ng-click="removeAnswer($index)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </label>
+                </div>
+            </form>
+            <form class="form-horizontal checkbox" ng-repeat="answer in answers" ng-show="questionTypeList.value === 'checkbox'">
+                <div class="form-group checkbox-inline">
+                    <label>
+                        <input type="checkbox" name="optionsCheckboxes" id="optionsCheckbox" value="option" disabled="disabled">
+                        <input type="text" ng-model="answer">
+                        <a ng-click="removeAnswer($index)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </label>
+                </div>
+            </form>
+            <form class="form-inline" ng-show="questionTypeList.value === 'range'">
+                <h4>Параметры множества</h4>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="rangeMin" placeholder="Минимум" ng-model="rangeMinVal">
+                    <input type="number" class="form-control" id="rangeMax" placeholder="Максимум" ng-model="rangeMaxVal">
+                    <input type="number" class="form-control" id="rangeStep" placeholder="Шаг" ng-model="rangeStepVal">
+                </div>
+                <br>
+            </form>
+            <hr>
+            <div>
+                <button class="btn btn-primary" ng-disabled="error || incomplete" ng-click="addAnswer()">
+                    <span class="glyphicon glyphicon-plus"></span> Добавить ответ
+                </button>
+                <button class="btn btn-success" ng-disabled="error || incomplete" ng-click="saveQuestion()">
+                    <span class="glyphicon glyphicon-save"></span> Сохранить вопрос
+                </button>
+            </div>
+        </div>
+        <script>
+        var app = angular.module('myApp', []);
+        app.controller('userCtrl', function($scope) {
+            $scope.survayName = "Название опроса";
+            $scope.survayDescription = "Какое-то описание";
+
+            $scope.answers = ["Вариант 1", "Вариант 2"];
+
+            $scope.addAnswer = function() {
+                $scope.answers.push("Вариант " + ($scope.answers.length + 1));
+            }
+
+            $scope.removeAnswer = function(index) {
+                $scope.answers.splice(index, 1);
+            }
+
+            $scope.questionTypes = [{
+                value: "radio",
+                label: "Вопрос с 1 вариантом ответа"
+            }, {
+                value: "checkbox",
+                label: "Вопрос с несколькими вариантами ответа"
+            }, {
+                value: "text",
+                label: "Вопрос с открытым ответом"
+            }, {
+                value: "range",
+                label: "Выбор из множества"
+            }];
+            $scope.questionTypeList = $scope.questionTypes[0];
+
+            function getQuestionTypeByTypeValue(questionTypes, value) {
+                for (var i = 0; i < questionTypes.length; i++) {
+                    if (questionTypes[i].value === value) {
+                        return questionTypes[i];
+                    }
+                }
+            }
+
+            $scope.questions = [{
+                "question": "question1?",
+                "questionId": "1",
+                "type": "radio",
+                "variants": ["one", "two", "three"]
+            }, {
+                "question": "question2?",
+                "questionId": "2",
+                "type": "checkbox",
+                "variants": ["one", "two", "three"]
+            }, {
+                "question": "question3?",
+                "questionId": "3",
+                "type": "text"
+            }, {
+                "question": "question4?",
+                "questionId": "4",
+                "type": "range",
+                "from": 0,
+                "to": 42,
+                "step": 1
+            }];
+
+            function getQuestionById(questions, id) {
+                for (var i = 0; i < questions.length; i++) {
+                    if (questions[i].questionId === id) {
+                        return questions[i];
+                    }
+                }
+            }
+
+            $scope.isNew = false;
+            $scope.questionId = "new";
+            $scope.edit = true;
+            $scope.error = false;
+            $scope.incomplete = false;
+
+            $scope.editQuestion = function(id) {
+                $scope.showEdit = true
+                $scope.qedditableQuestionId = id;
+                if (id == 'new') {
+                    $scope.edit = true;
+                    // $scope.incomplete = true;
+
+
+                    $scope.questionContent = "";
+                    $scope.questionTypeList = $scope.questionTypes[0];
+                    $scope.answers = ["Вариант 1", "Вариант 2"];
+
+                } else {
+                    $scope.edit = false;
+
+                    var question = getQuestionById($scope.questions, id);
+                    $scope.questionContent = question.question;
+                    $scope.questionTypeList = getQuestionTypeByTypeValue($scope.questionTypes, question.type);
+                    $scope.answers = question.variants;
+                    $scope.rangeMinVal = question.from;
+                    $scope.rangeMaxVal = question.to;
+                    $scope.rangeStepVal = question.step;
+                }
+            };
+
+            $scope.removeQuestion = function(id) {
+                var questions = $scope.questions;
+                for (var i = 0; i < questions.length; i++) {
+                    if (questions[i].questionId === id) {
+                        questions.splice(i, 1);
+                    }
+                }
+            }
+
+            $scope.saveQuestion = function() {
+                var newQuestion = $scope.questionId === "new" ? {} : getQuestionById($scope.questions, $scope.questionId);
+
+                console.log(newQuestion);
+
+                newQuestion.question = $scope.questionContent;
+                newQuestion.type = $scope.questionTypeList.value;
+                if (newQuestion.type === "radio" || newQuestion.type === "checkbox") {
+                    newQuestion.variants = $scope.answers;
+                } else if (newQuestion.type === "range") {
+                    newQuestion.from = $scope.rangeMinVal;
+                    newQuestion.to = $scope.rangeMaxVal;
+                    newQuestion.step = $scope.rangeStepVal;
+                }
+                if ($scope.questionId === "new") {
+                    newQuestion.questionId = "" + ($scope.questions.length + 1);
+                    $scope.questions.push(newQuestion);
+                }
+            }
+
+            $scope.saveSurvay = function() {
+                console.log($scope.questions);
+            }
+
+            $scope.$watch('passw1', function() {
+                $scope.test();
+            });
+            $scope.$watch('passw2', function() {
+                $scope.test();
+            });
+            $scope.$watch('fName', function() {
+                $scope.test();
+            });
+            $scope.$watch('lName', function() {
+                $scope.test();
+            });
+
+            $scope.test = function() {
+                // if ($scope.passw1 !== $scope.passw2) {
+                //     $scope.error = true;
+                // } else {
+                //     $scope.error = false;
+                // }
+                // $scope.incomplete = false;
+                // if ($scope.edit && (!$scope.fName.length ||
+                //         !$scope.lName.length ||
+                //         !$scope.passw1.length || !$scope.passw2.length)) {
+                //     $scope.incomplete = true;
+                // }
+            };
+
+        })
+        </script>
+</body>
+
+</html>
