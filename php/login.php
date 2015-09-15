@@ -4,11 +4,11 @@ include './lib/mysql.php';
 session_start();
 
 $mysqli = connectToMySQL();
-
+$email = str_replace('%2B', '+', htmlspecialchars($_POST['email']));
 $query = "SELECT email FROM users WHERE email = ? AND password = ? LIMIT 1";
 $statement = $mysqli->prepare($query);
 
-$statement->bind_param('ss', htmlspecialchars($_POST['email']), htmlspecialchars($_POST['password']));
+$statement->bind_param('ss', $email, htmlspecialchars($_POST['password']));
 
 $statement->execute();
 

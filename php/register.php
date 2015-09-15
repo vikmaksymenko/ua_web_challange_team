@@ -5,7 +5,7 @@ include './lib/mysql.php';
 $mysqli = connectToMySQL();
 
 $postUsername = htmlspecialchars($_POST['username']);
-$postEmail = htmlspecialchars($_POST['email']);
+$postEmail = str_replace('%2B', '+', htmlspecialchars($_POST['email']));
 $postPassword = htmlspecialchars($_POST['password']);
 
 if(findUser($mysqli, $postEmail)) {

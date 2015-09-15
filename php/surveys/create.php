@@ -29,9 +29,10 @@ $stmt->close();
 
 $es = new email_sender();
 $send_data = [];
-$emails = explode(" ", $_POST['emails']);
+$emailList = str_replace('%2B', '+', htmlspecialchars($_POST['emails']));
+$emails = explode(" ", $emailList);
 $query = "SELECT username, email FROM users WHERE id = ? LIMIT 1";
-    
+
 $statement = $mysqli->prepare($query);
     
 $statement->bind_param('s', $ownerID);
@@ -58,7 +59,6 @@ for($i = count($emails) - 1; $i >= 0; $i--) {
         echo 'Error : ('. $mysqli->errno .') '. $mysqli->error;
     }
 }
-
 
 $es->send_email($send_data);
 $mysqli->close();
