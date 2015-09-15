@@ -8,6 +8,10 @@ $postUsername = htmlspecialchars($_POST['username']);
 $postEmail = str_replace('%2B', '+', htmlspecialchars($_POST['email']));
 $postPassword = hash('sha256', htmlspecialchars($_POST['password']));
 
+if($postUsername == false || $postEmail == false || $_POST['password'] == false) {
+    die('Not all data recieved on registration!');
+}
+
 if(findUser($mysqli, $postEmail, false)) {
     echo 'false';
 } else {
