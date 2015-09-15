@@ -3,7 +3,6 @@
 
 <?php
 require_once 'mandrill-api-php/src/Mandrill.php';
-require_once 'Send.php';
 
 class email_sender
 {
@@ -43,7 +42,7 @@ class email_sender
                     ),
                     array(
                         'name' => 'invitation',
-                        'content' => $send['name_survey'] . " has sent you survey: "
+                        'content' => $send['name_sender'] . " has sent you survey: "
                     )
                 );
                 $message = array(
